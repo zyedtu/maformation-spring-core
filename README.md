@@ -2,7 +2,7 @@
 										SPRING CORE
 										
 Un **Bean:**   est une instance de classe gérée dans un conteneur de Spring.  
-# Spring ApplicationContext:
+### Spring ApplicationContext:
 L'interface ApplicationContext, propose 3 implementations:   
 * **ClassPathXmlApplicationContext**: qui charge la definition du context à partir d'un fichier xml continu dans la class Path (voir code MainIoc_001).    
 * **FileSystemXmlApplicationContext**: qui charge la definition du context à partir d'un fichier xml continu sur le file system (voir code MainIoc_002).  
@@ -10,14 +10,15 @@ L'interface ApplicationContext, propose 3 implementations:
 
 Pour accéder à une référance du contexte d'application de spring depuis la classe de notre bean, il faut implementer l'interface **ApplicationContextAware** (voir code MainIoc_003). 
 
-**Inversion de controle (Ioc):** est un designe pattern dans le processus définit les dependances d'un objet sans avoir à le créer.   
+### Inversion de controle (Ioc):   
+Est un designe pattern dans le processus définit les dependances d'un objet sans avoir à le créer.   
 L'inversion de controle est assuré avec *deux opérations*:  
 * la recherche de dépendances.  
 * L'injection de dépendances.  
 
 L'injection de dépendances peut etre effectuée via le constructeur ou via le modificateur(ou les setteurs).  
 
-*Injection par constructeur en XML:* (voir MainIoc_004)
+###### Injection par constructeur en XML: (voir MainIoc_004)
  
 On a déclaré un Bean Dao formationDao, après on declare un deuxièm Bean formationService qui a un constructeur avec deux arguments, le premier une réferance sur un autre bean spring et le deuxième une valeur string.  
 
@@ -39,7 +40,7 @@ et nomArgument-ref si le type est une reference sur une bean.
 	<bean id="formationService" class="fr.bouteraa.zied.service.FormationServiceImpl"
 		c:formationDao-ref="formationDao" c:etablissement="Zied">
 	</bean>   
-*Injection par setter en XML:* (voir MainIoc_005) 
+###### Injection par setter en XML: (voir MainIoc_005) 
  
 Dans notre exemple on declare deux setters un avec un argument formationDao et le deuxième etablissement.
 
@@ -63,11 +64,11 @@ et nomArgument-ref si le type est une reference sur une bean.
 Pour spring, tous les dependances qui ne sont pas une référence sur un bean elle se charge lui meme de faire
 la convension en bean. (voir MainIoc_006).
 
-*Injection par constructeur vs injection par setter:* 
+###### Injection par constructeur vs injection par setter:  
 
 L'injection par constructeur définit un contrat fort, c'est à un bean doit etre instancié avec toutes ces dépendances meme faculatatives, par contra l'injection par sette est la méthode recomander par ce que elle laisse tout la souplesse necessaire pour les dependances obtionneles.  
 
-*Autowiring: (Injection automatique):*  
+###### Autowiring: (Injection automatique):
 
 L'injection explicite des dependences implique plusieurs lignes dans le fichiers de configuration.  
 L'autowiring permet de simplifier le fichier de configuration.  
@@ -79,11 +80,11 @@ L'autowiring peut fonctionner selon plusieurs stratégies:
 * byType: TODO
 * constructor: TODO 
 
-*Les Règles de nommage des beans:*
+### Les Règles de nommage des beans:  
 
 TODO   
 
-*l'ecture d'un fichier properties & Utilisation de namespaces:*   (MainIoc_008)    
+### l'ecture d'un fichier properties & Utilisation de namespaces:   (MainIoc_008)    
     
 Pour lire un fichier properties il suffit de crée un fichier sur src/main/resources *database.properties* on met dedans des clé=valeur:  
 
@@ -142,7 +143,7 @@ Notre fichier de configuration de spring devient:
 		</bean>
 	</beans>
 
-*Héritage dans spring:*  
+### Héritage dans spring:  
 
 Spring permet l'heriatge en fait il utilise la notion du bean abstract *abstract="true"*:  
 
@@ -159,7 +160,7 @@ Spring permet l'heriatge en fait il utilise la notion du bean abstract *abstract
 		<property name="etablissement" value="zaroumia"></property>
 	</bean>
 
-*Création d'un prototype:*  (MainIoc_010)  
+### Création d'un prototype: (MainIoc_010)  
 
 Quand Spring instance des beans, il crée une seule instance de chaque bean (un Singleton), au moins 
 que ce comportement soit modifier, ceci est possible via l'attribut **scope** de la balise bean.
@@ -202,9 +203,58 @@ Résultat est:
 
 	Est ce que les deux beans sont les même: false
 
-##### Cycle de vie d'un bean: TODO
+### Cycle de vie d'un bean: (MainIoc_014) Configuration XML
 
-##### Configuration Java: Declaration d'un bean (MainIoc_016) 
+Le cycle de vie d'un bean spring est résumé en 6 étapes:  
+	-	le Chargement de définitions XML/Java  
+	-	Instantiation des beans  
+	-	Injection des dependances   
+	-	Initialisation  
+	-	Pret à l'emploi   
+	-	Destruction  
+
+On crée deux bean MonBean_014 et ServiceBean_014, on les declare dans le fichier xml.  
+On va ajouter un traitement, la méthode **init()** qui sera appelé lors d'initialistion, dans la classe MonBean_014:   
+
+	public class MonBean_014 {
+
+		public MonBean_014() {
+			System.out.println("constructeur");
+		}
+		
+		private void init() {
+			System.out.println("Je suis la méthode init de la classe MonBean_014");
+		}
+	}
+Il y a **2 façons** d'informer spring d'exécuter cette méthode lors de l'intialisation.
+* La première est d'ajouter l'attibut init-method="init" dans le fichier xml là est declaré le bean
+
+    <bean id="monBean" class="fr.bouteraa.zied.maformation_spring_ioc.MonBean_014" init-method="init"></bean>
+Lors de chargement Spring détecte qu'il y a une méthode d'intialisation du bean MonBean_014, donc il va l'ajouter dans le phase d'initialisation.  
+
+* la 2eme facon est on va le faire sur le 2em bean ServiceBean_014, il consiste à implementer l'interface InitializingBean dont on va implementer la méthode afterPropertiesSet():  
+
+	public class MonService_014 implements InitializingBean{
+
+		public MonService_014() {
+			System.out.println("constructeur");
+		}
+	
+		@Override
+		public void afterPropertiesSet() throws Exception {
+			System.out.println("Je suis le méthode afterPropertiesSet de la classe MonService_014");
+		}
+	}
+
+Lors de chargement Spring va détecter toutes les classes qui implementent cette interface **InitializingBean**, et du coup il va greffer le comportement de le méthode afterPropertiesSet à chaque initialisation du Bean de type MonService_014.  
+Ci-dessous le resultat d'éxcution:  
+
+	constructeur
+	Je suis la méthode init de la classe MonBean_014
+	constructeur
+	Je suis le méthode afterPropertiesSet de la classe MonService_014
+// TODO
+### Configuration Java: Declaration d'un bean (MainIoc_016) 
 
 Pour créer un bean en utilisant le configuration Java, il faut 3 choses.  
 * Il faut créer une classe de configuration.
