@@ -253,7 +253,43 @@ Ci-dessous le resultat d'éxcution:
 	Je suis la méthode init de la classe MonBean_014
 	constructeur
 	Je suis le méthode afterPropertiesSet de la classe MonService_014
-// TODO
+La même chose pour **la destruction** d'un bean spring, ça ce fait avec 2 façons:  
+
+* 1ere façon:on va définir dans le bean MonBean_0014 une méthode destroy() et après on ajoute dans le fichier xml on affecte l'attribut *destroy-method avec "destroy"*, mais il y a une subtilité sur le destruction d'un bean spring,il peut pas etre détruit sans fermer le contexte d'application.
+Pour appeller le méthode **close()** sur le contexte d'application, il y a une interface qui s'appelle **ConfigurableApplicationContext** qui implementer par ClassPathXmlApplicationContext, cette interface elle même implemente l'interface closeble et qui expose le méthode close().  
+
+	public class MonBean_014 {
+
+		public MonBean_014() {
+			System.out.println("constructeur");
+		}
+		
+		private void init() {
+			System.out.println("Je suis la méthode init de la classe MonBean_014");
+		}
+		
+		private void destory() {
+			System.out.println("Je suis la méthode destory de la classe MonBean_014");
+		}
+	}
+	
+	<bean id="monBean" class="fr.bouteraa.zied.maformation_spring_ioc.MonBean_014" 
+	     init-method="init" destroy-method="destory"></bean>
+Et le classe main:
+
+	ConfigurableApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:appContext_14.xml");
+		applicationContext.close();
+* Le 2eme façon pour detruire un bean spring est d'implementer l'interface **DisposableBean**, du coup on va implementer la méthode destroy() 
+En exécutons la totalité des deux beans Sppring on aura ça comme résutlat:  
+
+	constructeur
+	Je suis la méthode init de la classe MonBean_014
+	constructeur
+	Je suis le méthode afterPropertiesSet de la classe MonService_014
+	Je suis le méthode destroy de la classe MonService_014
+	Je suis la méthode destory de la classe MonBean_014
+
+	
 ### Configuration Java: Declaration d'un bean (MainIoc_016) 
 
 Pour créer un bean en utilisant le configuration Java, il faut 3 choses.  

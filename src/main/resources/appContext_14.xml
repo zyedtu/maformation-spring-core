@@ -4,7 +4,8 @@
     xsi:schemaLocation="
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 	
-	     <bean id="monBean" class="fr.bouteraa.zied.maformation_spring_ioc.MonBean_014" init-method="init"></bean>
+	     <bean id="monBean" class="fr.bouteraa.zied.maformation_spring_ioc.MonBean_014" 
+	     init-method="init" destroy-method="destory"></bean>
         
         <bean id="monService" class="fr.bouteraa.zied.maformation_spring_ioc.MonService_014"></bean>
 </beans>

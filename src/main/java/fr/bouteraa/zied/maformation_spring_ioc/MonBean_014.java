@@ -9,4 +9,8 @@ public class MonBean_014 {
 	private void init() {
 		System.out.println("Je suis la méthode init de la classe MonBean_014");
 	}
+	
+	private void destory() {
+		System.out.println("Je suis la méthode destory de la classe MonBean_014");
+	}
 }
