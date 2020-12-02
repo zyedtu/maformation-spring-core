@@ -1,4 +1,4 @@
-package fr.zied.bouteraa.config;
+package fr.bouteraa.zied.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
