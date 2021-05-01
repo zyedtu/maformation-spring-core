@@ -19,5 +19,5 @@ public class MainIoc_003 {
 		monBeanAware.helloWord();
 
 	}
-
+}
 }

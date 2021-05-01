@@ -3,7 +3,7 @@
 										
 Un **Bean:**   est une instance de classe gérée dans un conteneur de Spring.  
 ### Spring ApplicationContext:
-L'interface ApplicationContext, propose 3 implementations:   
+L'interface ApplicationContext est le **point d'entré** pour le container Spring, propose 3 implementations:   
 * **ClassPathXmlApplicationContext**: qui charge la definition du context à partir d'un fichier xml continu dans la class Path (voir code MainIoc_001).    
 * **FileSystemXmlApplicationContext**: qui charge la definition du context à partir d'un fichier xml continu sur le file system (voir code MainIoc_002).  
 * **AnnotationConfigApplicationContext**:  todo  
